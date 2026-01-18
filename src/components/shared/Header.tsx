@@ -14,6 +14,7 @@ const navLinks = [
     { href: "/data", label: "Data" },
     { href: "/games", label: "Games" },
     { href: "/polls", label: "Polls" },
+    { href: "/about", label: "About" },
 ];
 
 export function Header() {
@@ -160,8 +161,8 @@ export function Header() {
                                             href={link.href}
                                             onClick={() => setIsMobileMenuOpen(false)}
                                             className={`block py-4 px-4 rounded-lg text-lg font-medium transition-colors ${pathname === link.href
-                                                    ? "bg-glacier-white text-deep-navy"
-                                                    : "text-glacier-white hover:bg-white/10"
+                                                ? "bg-glacier-white text-deep-navy"
+                                                : "text-glacier-white hover:bg-white/10"
                                                 }`}
                                         >
                                             {link.label}
