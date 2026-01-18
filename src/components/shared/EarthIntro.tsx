@@ -218,6 +218,9 @@ export function EarthIntro({ onComplete, skipEnabled = true }: EarthIntroProps) 
         return null;
     }
 
+    // At this point, phase is narrowed to exclude "complete" due to early return above
+    // So we use phase directly which is now "space" | "zooming" | "focused"
+
     return (
         <motion.div
             className="fixed inset-0 z-50 bg-deep-navy"
@@ -239,7 +242,7 @@ export function EarthIntro({ onComplete, skipEnabled = true }: EarthIntroProps) 
                         <ambientLight intensity={0.3} />
                         <directionalLight position={[10, 10, 10]} intensity={1} />
                         <directionalLight position={[-5, -5, -5]} intensity={0.2} />
-                        <AnimatedEarth phase={phase === "complete" ? "focused" : phase} onZoomComplete={handleZoomComplete} />
+                        <AnimatedEarth phase={phase} onZoomComplete={handleZoomComplete} />
                     </Canvas>
                 </Suspense>
             </div>
@@ -302,8 +305,8 @@ export function EarthIntro({ onComplete, skipEnabled = true }: EarthIntroProps) 
                 </AnimatePresence>
             </div>
 
-            {/* Skip Button */}
-            {skipEnabled && showSkip && phase !== "complete" && (
+            {/* Skip Button - phase can't be "complete" here due to early return */}
+            {skipEnabled && showSkip && (
                 <motion.button
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -316,12 +319,12 @@ export function EarthIntro({ onComplete, skipEnabled = true }: EarthIntroProps) 
 
             {/* Progress indicator */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-                {["space", "zooming", "focused"].map((p, i) => (
+                {["space", "zooming", "focused"].map((p) => (
                     <div
                         key={p}
-                        className={`w-2 h-2 rounded-full transition-all ${phase === p || (phase === "complete" && p === "focused")
-                                ? "bg-glacier-white"
-                                : "bg-glacier-white/30"
+                        className={`w-2 h-2 rounded-full transition-all ${phase === p
+                            ? "bg-glacier-white"
+                            : "bg-glacier-white/30"
                             }`}
                     />
                 ))}
