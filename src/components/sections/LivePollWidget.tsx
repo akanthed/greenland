@@ -1,0 +1,227 @@
+"use client";
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { ArrowRight, BarChart2 } from "lucide-react";
+
+interface PollOption {
+    id: string;
+    label: string;
+    votes: number;
+}
+
+const pollData = {
+    question: "Greenland's future should be:",
+    totalVotes: 47392,
+    options: [
+        { id: "independent", label: "Independent Nation", votes: 15847 },
+        { id: "denmark", label: "Remain with Denmark", votes: 12234 },
+        { id: "usa", label: "Join United States", votes: 11298 },
+        { id: "autonomy", label: "Enhanced Autonomy", votes: 8013 },
+    ] as PollOption[],
+};
+
+export function LivePollWidget() {
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [hasVoted, setHasVoted] = useState(false);
+
+    const handleVote = (optionId: string) => {
+        setSelectedOption(optionId);
+    };
+
+    const submitVote = () => {
+        if (selectedOption) {
+            setHasVoted(true);
+            // In production, this would send to backend
+        }
+    };
+
+    const getPercentage = (votes: number) => {
+        return ((votes / pollData.totalVotes) * 100).toFixed(1);
+    };
+
+    return (
+        <section className="min-h-[60vh] py-24 px-6 bg-gradient-to-b from-glacier-white to-light-bg">
+            <div className="section-container">
+                {/* Heading */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-12"
+                >
+                    <h2 className="text-section-heading text-dark-slate font-heading mb-4">
+                        What Do You Think?
+                    </h2>
+                    <p className="text-body-large text-cool-gray">
+                        Join{" "}
+                        <span className="font-bold text-info">
+                            {pollData.totalVotes.toLocaleString()}
+                        </span>{" "}
+                        people who&apos;ve voted
+                    </p>
+                </motion.div>
+
+                {/* Poll Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="max-w-2xl mx-auto bg-glacier-white rounded-3xl shadow-xl p-8 md:p-12"
+                >
+                    {/* Question */}
+                    <h3 className="text-xl md:text-2xl font-bold text-dark-slate mb-8">
+                        {pollData.question}
+                    </h3>
+
+                    {/* Options */}
+                    <div className="space-y-4">
+                        <AnimatePresence mode="wait">
+                            {!hasVoted ? (
+                                // Voting state
+                                <motion.div
+                                    key="voting"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="space-y-3"
+                                >
+                                    {pollData.options.map((option) => (
+                                        <motion.button
+                                            key={option.id}
+                                            whileHover={{ scale: 1.01 }}
+                                            whileTap={{ scale: 0.99 }}
+                                            onClick={() => handleVote(option.id)}
+                                            className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${selectedOption === option.id
+                                                    ? "border-info bg-info/5"
+                                                    : "border-border-gray hover:border-cool-gray"
+                                                }`}
+                                        >
+                                            {/* Radio circle */}
+                                            <div
+                                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedOption === option.id
+                                                        ? "border-info"
+                                                        : "border-cool-gray"
+                                                    }`}
+                                            >
+                                                {selectedOption === option.id && (
+                                                    <motion.div
+                                                        initial={{ scale: 0 }}
+                                                        animate={{ scale: 1 }}
+                                                        className="w-3 h-3 rounded-full bg-info"
+                                                    />
+                                                )}
+                                            </div>
+                                            <span className="text-dark-slate font-medium">
+                                                {option.label}
+                                            </span>
+                                        </motion.button>
+                                    ))}
+
+                                    {/* Vote button */}
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={submitVote}
+                                        disabled={!selectedOption}
+                                        className={`w-full py-4 rounded-xl font-bold text-lg transition-all mt-6 ${selectedOption
+                                                ? "bg-info text-glacier-white hover:bg-blue-600"
+                                                : "bg-border-gray text-cool-gray cursor-not-allowed"
+                                            }`}
+                                    >
+                                        Vote Now
+                                    </motion.button>
+                                </motion.div>
+                            ) : (
+                                // Results state
+                                <motion.div
+                                    key="results"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="space-y-4"
+                                >
+                                    <div className="flex items-center gap-2 text-success font-medium mb-6">
+                                        <span className="w-5 h-5 rounded-full bg-success flex items-center justify-center">
+                                            <svg
+                                                className="w-3 h-3 text-glacier-white"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M5 13l4 4L19 7"
+                                                />
+                                            </svg>
+                                        </span>
+                                        Your vote has been recorded!
+                                    </div>
+
+                                    {pollData.options.map((option, index) => {
+                                        const percentage = parseFloat(getPercentage(option.votes));
+                                        const isSelected = selectedOption === option.id;
+
+                                        return (
+                                            <motion.div
+                                                key={option.id}
+                                                initial={{ opacity: 0, x: -20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: index * 0.1 }}
+                                                className="relative"
+                                            >
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span
+                                                        className={`font-medium ${isSelected ? "text-info" : "text-dark-slate"
+                                                            }`}
+                                                    >
+                                                        {option.label}
+                                                        {isSelected && " ✓"}
+                                                    </span>
+                                                    <span className="text-cool-gray text-sm">
+                                                        {percentage}% ({option.votes.toLocaleString()})
+                                                    </span>
+                                                </div>
+                                                <div className="h-3 bg-light-bg rounded-full overflow-hidden">
+                                                    <motion.div
+                                                        initial={{ width: 0 }}
+                                                        animate={{ width: `${percentage}%` }}
+                                                        transition={{ duration: 1, delay: index * 0.1 }}
+                                                        className={`h-full rounded-full ${isSelected
+                                                                ? "bg-gradient-to-r from-info to-blue-400"
+                                                                : "bg-border-gray"
+                                                            }`}
+                                                    />
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                </motion.div>
+
+                {/* See all polls CTA */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5 }}
+                    className="text-center mt-12"
+                >
+                    <Link
+                        href="/polls"
+                        className="btn btn-secondary btn-lg inline-flex items-center gap-2"
+                    >
+                        <BarChart2 className="w-5 h-5" />
+                        See All Polls & Results
+                        <ArrowRight className="w-5 h-5" />
+                    </Link>
+                </motion.div>
+            </div>
+        </section>
+    );
+}
