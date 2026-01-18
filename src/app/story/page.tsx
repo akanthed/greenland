@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useScroll, AnimatePresence } from "framer-motion";
 import Section1Scale from "@/components/story/Section1Scale";
 import Section2Ice from "@/components/story/Section2Ice";
@@ -30,32 +30,48 @@ export default function StoryPage() {
     const { scrollYProgress } = useScroll({ container: containerRef });
     const [showNavHint, setShowNavHint] = useState(true);
 
-    // Track active section based on scroll
-    useEffect(() => {
-        const handleScroll = () => {
-            if (!containerRef.current) return;
-            const scrollTop = containerRef.current.scrollTop;
-            const sectionHeight = window.innerHeight;
-            const newActive = Math.round(scrollTop / sectionHeight);
-            setActiveSection(Math.min(newActive, sections.length - 1));
+    // Throttled scroll handler for better performance
+    const handleScroll = useCallback(() => {
+        if (!containerRef.current) return;
+        const scrollTop = containerRef.current.scrollTop;
+        const sectionHeight = window.innerHeight;
+        const newActive = Math.round(scrollTop / sectionHeight);
+        setActiveSection(Math.min(Math.max(0, newActive), sections.length - 1));
 
-            // Hide nav hint after first scroll
-            if (scrollTop > 100 && showNavHint) {
-                setShowNavHint(false);
+        // Hide nav hint after first scroll
+        if (scrollTop > 100 && showNavHint) {
+            setShowNavHint(false);
+        }
+    }, [showNavHint]);
+
+    // Track active section based on scroll with throttling
+    useEffect(() => {
+        let ticking = false;
+
+        const throttledScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
 
         const container = containerRef.current;
-        container?.addEventListener("scroll", handleScroll);
-        return () => container?.removeEventListener("scroll", handleScroll);
-    }, [showNavHint]);
+        container?.addEventListener("scroll", throttledScroll, { passive: true });
+        return () => container?.removeEventListener("scroll", throttledScroll);
+    }, [handleScroll]);
 
     const scrollToSection = (index: number) => {
         if (!containerRef.current) return;
-        containerRef.current.scrollTo({
-            top: index * window.innerHeight,
-            behavior: "smooth",
-        });
+        const targetElement = containerRef.current.children[index] as HTMLElement;
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
     };
 
     const goToPrev = () => {
@@ -157,8 +173,8 @@ export default function StoryPage() {
                             key={index}
                             onClick={() => scrollToSection(index)}
                             className={`w-2 h-2 rounded-full transition-all ${activeSection === index
-                                    ? "bg-glacier-white w-6"
-                                    : "bg-glacier-white/30 hover:bg-glacier-white/50"
+                                ? "bg-glacier-white w-6"
+                                : "bg-glacier-white/30 hover:bg-glacier-white/50"
                                 }`}
                             aria-label={`Go to section ${index + 1}`}
                         />
@@ -212,16 +228,22 @@ export default function StoryPage() {
                 />
             </motion.div>
 
-            {/* Sections Container */}
+            {/* Sections Container - Using proximity snap for smoother feel */}
             <div
                 ref={containerRef}
-                className="h-screen overflow-y-auto overflow-x-hidden snap-y snap-mandatory scrollbar-hide"
+                className="h-screen overflow-y-auto overflow-x-hidden scrollbar-hide"
+                style={{
+                    scrollBehavior: "smooth",
+                    scrollSnapType: "y proximity",
+                    WebkitOverflowScrolling: "touch"
+                }}
             >
                 {sections.map((section, index) => (
                     <section
                         key={section.id}
                         id={section.id}
-                        className="min-h-screen snap-start relative"
+                        className="min-h-screen relative"
+                        style={{ scrollSnapAlign: "start" }}
                     >
                         <section.component sectionIndex={index} />
                     </section>
@@ -230,3 +252,4 @@ export default function StoryPage() {
         </div>
     );
 }
+

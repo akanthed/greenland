@@ -786,10 +786,10 @@ export default function VotingGame() {
                                             <div
                                                 key={num}
                                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${num < currentRound.roundNumber
-                                                        ? "bg-success text-glacier-white"
-                                                        : num === currentRound.roundNumber
-                                                            ? "bg-glacier-white text-deep-navy"
-                                                            : "bg-glacier-white/20 text-glacier-white/50"
+                                                    ? "bg-success text-glacier-white"
+                                                    : num === currentRound.roundNumber
+                                                        ? "bg-glacier-white text-deep-navy"
+                                                        : "bg-glacier-white/20 text-glacier-white/50"
                                                     }`}
                                             >
                                                 {num < currentRound.roundNumber ? "✓" : num}
@@ -856,8 +856,8 @@ export default function VotingGame() {
                                         onClick={() => handleChoice(choice)}
                                         disabled={isAnimating}
                                         className={`w-full text-left p-6 rounded-2xl border-2 transition-all ${isAnimating
-                                                ? "opacity-50 cursor-not-allowed"
-                                                : "bg-glacier-white/5 hover:bg-glacier-white/15 border-glacier-white/20 hover:border-glacier-white/50"
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : "bg-glacier-white/5 hover:bg-glacier-white/15 border-glacier-white/20 hover:border-glacier-white/50"
                                             }`}
                                     >
                                         <div className="flex items-start gap-4">
@@ -883,35 +883,66 @@ export default function VotingGame() {
                             exit={{ opacity: 0 }}
                             className="max-w-3xl mx-auto text-center"
                         >
-                            <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ type: "spring", delay: 0.2 }}
-                                className="text-9xl mb-8"
+                            {/* Shareable Card */}
+                            <div
+                                id="share-card"
+                                className="relative overflow-hidden rounded-3xl p-8 bg-gradient-to-br from-cyan-600 via-teal-600 to-emerald-700 mb-8"
                             >
-                                {outcome.emoji}
-                            </motion.div>
+                                {/* Background pattern */}
+                                <div className="absolute inset-0 opacity-10">
+                                    <div className="absolute inset-0" style={{
+                                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                                    }} />
+                                </div>
 
-                            <h1 className="text-hero font-heading mb-4">{outcome.title}</h1>
-                            <p className="text-xl text-arctic-ice mb-8">{outcome.description}</p>
+                                {/* Branding */}
+                                <div className="absolute top-4 left-4 flex items-center gap-2">
+                                    <span className="text-2xl">🇬🇱</span>
+                                    <span className="text-glacier-white/80 text-sm font-medium">GREENLAND: The Untold Story</span>
+                                </div>
 
-                            {/* Stats breakdown */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                                {[
-                                    { icon: "🇬🇱", label: "Sovereignty", value: outcome.stats.sovereignty },
-                                    { icon: "💰", label: "Economy", value: outcome.stats.economy },
-                                    { icon: "🌿", label: "Environment", value: outcome.stats.environment },
-                                    { icon: "🎭", label: "Culture", value: outcome.stats.culture },
-                                ].map((stat) => (
-                                    <div
-                                        key={stat.label}
-                                        className="bg-glacier-white/10 rounded-xl p-4"
+                                <div className="relative pt-6">
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ type: "spring", delay: 0.2 }}
+                                        className="text-8xl mb-6"
                                     >
-                                        <span className="text-2xl">{stat.icon}</span>
-                                        <p className="text-3xl font-bold mt-2">{stat.value}</p>
-                                        <p className="text-sm text-glacier-white/60">{stat.label}</p>
+                                        {outcome.emoji}
+                                    </motion.div>
+
+                                    <h1 className="text-4xl font-heading mb-3">{outcome.title}</h1>
+                                    <p className="text-lg text-glacier-white/90 mb-6">{outcome.description}</p>
+
+                                    {/* Player comparison - VIRAL ELEMENT (Simulated for demo) */}
+                                    <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-glacier-white/20 backdrop-blur mb-6">
+                                        <Users className="w-5 h-5" />
+                                        <span className="font-bold">
+                                            Only <span className="text-2xl">{outcome.globalPercentage}%</span> got this outcome!
+                                        </span>
                                     </div>
-                                ))}
+
+                                    {/* Compact stats grid */}
+                                    <div className="grid grid-cols-4 gap-2">
+                                        {[
+                                            { icon: "🇬🇱", label: "Sovereignty", value: outcome.stats.sovereignty },
+                                            { icon: "💰", label: "Economy", value: outcome.stats.economy },
+                                            { icon: "🌿", label: "Environment", value: outcome.stats.environment },
+                                            { icon: "🎭", label: "Culture", value: outcome.stats.culture },
+                                        ].map((stat) => (
+                                            <div
+                                                key={stat.label}
+                                                className="bg-glacier-white/10 rounded-xl p-3"
+                                            >
+                                                <span className="text-lg">{stat.icon}</span>
+                                                <p className="text-xl font-bold">{stat.value}</p>
+                                                <p className="text-xs text-glacier-white/60">{stat.label}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <p className="text-sm text-glacier-white/50 mt-4">You Decide: Greenland's Future</p>
+                                </div>
                             </div>
 
                             {/* Detailed outcome */}
@@ -920,21 +951,13 @@ export default function VotingGame() {
                                 <p className="text-glacier-white/80">{outcome.detailedOutcome}</p>
                             </div>
 
-                            {/* Global comparison */}
-                            <div className="flex items-center justify-center gap-3 mb-8 p-4 bg-glacier-white/5 rounded-xl">
-                                <Trophy className="w-6 h-6 text-resource-gold" />
-                                <span>
-                                    <strong>{outcome.globalPercentage}%</strong> of players reached this outcome
-                                </span>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex flex-wrap justify-center gap-4">
+                            {/* Enhanced Share Actions */}
+                            <div className="flex flex-wrap justify-center gap-3 mb-6">
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={shareResult}
-                                    className="px-8 py-4 rounded-xl bg-glacier-white text-deep-navy font-bold flex items-center gap-2"
+                                    className="px-6 py-3 rounded-xl bg-glacier-white text-deep-navy font-bold flex items-center gap-2"
                                 >
                                     <Share2 className="w-5 h-5" />
                                     Share Result
@@ -943,17 +966,56 @@ export default function VotingGame() {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={resetGame}
-                                    className="px-8 py-4 rounded-xl bg-glacier-white/10 border border-glacier-white/30 font-bold flex items-center gap-2"
+                                    className="px-6 py-3 rounded-xl bg-glacier-white/10 border border-glacier-white/30 font-bold flex items-center gap-2"
                                 >
                                     <RotateCcw className="w-5 h-5" />
                                     Play Again
                                 </motion.button>
                             </div>
 
+                            {/* Social share buttons */}
+                            <div className="flex justify-center gap-3 mb-8">
+                                <button
+                                    onClick={() => {
+                                        const text = encodeURIComponent(`${outcome.emoji} I got "${outcome.title}" in You Decide: Greenland's Future!\n\nOnly ${outcome.globalPercentage}% of players got this outcome.\n\nPlay now:`);
+                                        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(window.location.href)}`, "_blank");
+                                    }}
+                                    className="p-3 rounded-full bg-[#1DA1F2] hover:bg-[#1a8cd8] transition-colors"
+                                    aria-label="Share to Twitter"
+                                >
+                                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank");
+                                    }}
+                                    className="p-3 rounded-full bg-[#1877F2] hover:bg-[#166fe5] transition-colors"
+                                    aria-label="Share to Facebook"
+                                >
+                                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(`${outcome.emoji} I got "${outcome.title}" in You Decide: Greenland's Future!\n\nOnly ${outcome.globalPercentage}% of players got this outcome.\n\nPlay now: ${window.location.href}`);
+                                        alert("Copied to clipboard!");
+                                    }}
+                                    className="p-3 rounded-full bg-glacier-white/20 hover:bg-glacier-white/30 transition-colors"
+                                    aria-label="Copy to clipboard"
+                                >
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                    </svg>
+                                </button>
+                            </div>
+
                             {/* Back to games */}
                             <Link
                                 href="/games"
-                                className="inline-flex items-center gap-2 text-glacier-white/60 hover:text-glacier-white mt-8 transition-colors"
+                                className="inline-flex items-center gap-2 text-glacier-white/60 hover:text-glacier-white mt-4 transition-colors"
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Back to Games

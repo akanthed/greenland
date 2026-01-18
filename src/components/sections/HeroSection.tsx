@@ -163,8 +163,9 @@ export function HeroSection() {
                 >
                     {[
                         { value: "2.16M", label: "km² of land" },
-                        { value: "410K", label: "km³ ice lost/decade" },
-                        { value: "$280T+", label: "in minerals" },
+                        { value: "105B", label: "tonnes ice lost (2025)" },
+                        { value: "$280T+", label: "in rare earth minerals" },
+                        { value: "29th", label: "year of ice shrinkage" },
                     ].map((stat, index) => (
                         <div
                             key={index}

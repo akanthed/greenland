@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, BarChart2 } from "lucide-react";
+import { ArrowRight, BarChart2, Activity } from "lucide-react";
 
 interface PollOption {
     id: string;
@@ -11,20 +11,54 @@ interface PollOption {
     votes: number;
 }
 
-const pollData = {
-    question: "Greenland's future should be:",
-    totalVotes: 47392,
-    options: [
-        { id: "independent", label: "Independent Nation", votes: 15847 },
-        { id: "denmark", label: "Remain with Denmark", votes: 12234 },
-        { id: "usa", label: "Join United States", votes: 11298 },
-        { id: "autonomy", label: "Enhanced Autonomy", votes: 8013 },
-    ] as PollOption[],
+// SIMULATED DATA - In production, this would come from a real-time database
+// Current numbers are based on hypothetical distribution for demonstration
+const getSimulatedPollData = () => {
+    // Add slight random variation to make it feel "live"
+    const baseVotes = {
+        independent: 15847,
+        denmark: 12234,
+        usa: 11298,
+        autonomy: 8013,
+    };
+
+    return {
+        question: "Greenland's future should be:",
+        totalVotes: Object.values(baseVotes).reduce((a, b) => a + b, 0),
+        options: [
+            { id: "independent", label: "Independent Nation", votes: baseVotes.independent },
+            { id: "denmark", label: "Remain with Denmark", votes: baseVotes.denmark },
+            { id: "usa", label: "Join United States", votes: baseVotes.usa },
+            { id: "autonomy", label: "Enhanced Autonomy", votes: baseVotes.autonomy },
+        ] as PollOption[],
+    };
 };
 
 export function LivePollWidget() {
+    const [pollData, setPollData] = useState(getSimulatedPollData());
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [hasVoted, setHasVoted] = useState(false);
+
+    // Simulate "live" votes coming in occasionally (demo feature)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setPollData(prev => {
+                const randomOption = prev.options[Math.floor(Math.random() * prev.options.length)];
+                const increment = Math.floor(Math.random() * 3) + 1;
+                return {
+                    ...prev,
+                    totalVotes: prev.totalVotes + increment,
+                    options: prev.options.map(opt =>
+                        opt.id === randomOption.id
+                            ? { ...opt, votes: opt.votes + increment }
+                            : opt
+                    ),
+                };
+            });
+        }, 15000); // Add votes every 15 seconds
+
+        return () => clearInterval(interval);
+    }, []);
 
     const handleVote = (optionId: string) => {
         setSelectedOption(optionId);
@@ -32,6 +66,16 @@ export function LivePollWidget() {
 
     const submitVote = () => {
         if (selectedOption) {
+            // Add user's vote to the simulated count
+            setPollData(prev => ({
+                ...prev,
+                totalVotes: prev.totalVotes + 1,
+                options: prev.options.map(opt =>
+                    opt.id === selectedOption
+                        ? { ...opt, votes: opt.votes + 1 }
+                        : opt
+                ),
+            }));
             setHasVoted(true);
             // In production, this would send to backend
         }
@@ -61,6 +105,11 @@ export function LivePollWidget() {
                         </span>{" "}
                         people who&apos;ve voted
                     </p>
+                    {/* Simulated data indicator */}
+                    <div className="inline-flex items-center gap-2 mt-3 px-3 py-1 rounded-full bg-info/10 text-info text-xs">
+                        <Activity className="w-3 h-3" />
+                        <span>Live Demo Mode</span>
+                    </div>
                 </motion.div>
 
                 {/* Poll Card */}
@@ -94,15 +143,15 @@ export function LivePollWidget() {
                                             whileTap={{ scale: 0.99 }}
                                             onClick={() => handleVote(option.id)}
                                             className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${selectedOption === option.id
-                                                    ? "border-info bg-info/5"
-                                                    : "border-border-gray hover:border-cool-gray"
+                                                ? "border-info bg-info/5"
+                                                : "border-border-gray hover:border-cool-gray"
                                                 }`}
                                         >
                                             {/* Radio circle */}
                                             <div
                                                 className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedOption === option.id
-                                                        ? "border-info"
-                                                        : "border-cool-gray"
+                                                    ? "border-info"
+                                                    : "border-cool-gray"
                                                     }`}
                                             >
                                                 {selectedOption === option.id && (
@@ -126,8 +175,8 @@ export function LivePollWidget() {
                                         onClick={submitVote}
                                         disabled={!selectedOption}
                                         className={`w-full py-4 rounded-xl font-bold text-lg transition-all mt-6 ${selectedOption
-                                                ? "bg-info text-glacier-white hover:bg-blue-600"
-                                                : "bg-border-gray text-cool-gray cursor-not-allowed"
+                                            ? "bg-info text-glacier-white hover:bg-blue-600"
+                                            : "bg-border-gray text-cool-gray cursor-not-allowed"
                                             }`}
                                     >
                                         Vote Now
@@ -190,8 +239,8 @@ export function LivePollWidget() {
                                                         animate={{ width: `${percentage}%` }}
                                                         transition={{ duration: 1, delay: index * 0.1 }}
                                                         className={`h-full rounded-full ${isSelected
-                                                                ? "bg-gradient-to-r from-info to-blue-400"
-                                                                : "bg-border-gray"
+                                                            ? "bg-gradient-to-r from-info to-blue-400"
+                                                            : "bg-border-gray"
                                                             }`}
                                                     />
                                                 </div>
