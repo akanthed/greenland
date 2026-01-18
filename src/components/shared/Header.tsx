@@ -79,7 +79,7 @@ export function Header() {
                         className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-glacier-white"
                         aria-label="Change perspective"
                     >
-                        <span className="text-lg">{perspectiveInfo.icon}</span>
+                        <span className="w-6 h-6 flex items-center justify-center text-lg">{perspectiveInfo.icon}</span>
                         <span className="text-sm font-medium">{perspectiveInfo.label}</span>
                         <Globe className="w-4 h-4 opacity-70" />
                     </button>
