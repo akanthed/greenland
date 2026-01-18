@@ -2,6 +2,8 @@
   "name": "greenland-app",
   "version": "0.1.0",
   "private": true,
+  "description": "An interactive, data-driven journey into Greenland's geopolitics, climate crisis, and indigenous culture.",
+  "author": "Akshay Kanthed <akshay.kanthed007@gmail.com>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

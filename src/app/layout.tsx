@@ -47,8 +47,8 @@ export const metadata: Metadata = {
     "Inuit",
     "independence",
   ],
-  authors: [{ name: "Greenland: The Untold Story" }],
-  creator: "Greenland: The Untold Story",
+  authors: [{ name: "Akshay Kanthed", url: "mailto:akshay.kanthed007@gmail.com" }],
+  creator: "Akshay Kanthed",
   openGraph: {
     type: "website",
     locale: "en_US",

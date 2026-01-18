@@ -11,7 +11,7 @@ const footerLinks = {
             { label: "Our Mission", href: "/about" },
             { label: "Team", href: "/about#team" },
             { label: "Methodology", href: "/about#methodology" },
-            { label: "Contact", href: "/contact" },
+            { label: "Contact", href: "mailto:akshay.kanthed007@gmail.com", external: true },
         ],
     },
     sections: {
@@ -48,12 +48,21 @@ export function Footer() {
                     <ul className="space-y-3">
                         {footerLinks.about.links.map((link) => (
                             <li key={link.href}>
-                                <Link
-                                    href={link.href}
-                                    className="text-glacier-white/70 hover:text-glacier-white transition-colors"
-                                >
-                                    {link.label}
-                                </Link>
+                                {link.external ? (
+                                    <a
+                                        href={link.href}
+                                        className="text-glacier-white/70 hover:text-glacier-white transition-colors"
+                                    >
+                                        {link.label}
+                                    </a>
+                                ) : (
+                                    <Link
+                                        href={link.href}
+                                        className="text-glacier-white/70 hover:text-glacier-white transition-colors"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                )}
                             </li>
                         ))}
                     </ul>
