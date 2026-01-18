@@ -7,10 +7,14 @@ import { QuickStats } from "@/components/sections/QuickStats";
 import { JourneyPreview } from "@/components/sections/JourneyPreview";
 import { GamesTeaser } from "@/components/sections/GamesTeaser";
 import { LivePollWidget } from "@/components/sections/LivePollWidget";
+import { OnboardingTour } from "@/components/shared";
 
 export default function HomePage() {
   return (
     <>
+      {/* Onboarding Experience */}
+      <OnboardingTour />
+
       {/* Hero Section - 100vh */}
       <HeroSection />
 

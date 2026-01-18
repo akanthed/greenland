@@ -191,7 +191,7 @@ export function HeroSection() {
                     </a>
                     <a
                         href="/games"
-                        className="btn btn-secondary border-glacier-white text-glacier-white hover:bg-glacier-white hover:text-deep-navy btn-lg"
+                        className="btn border-2 border-glacier-white text-glacier-white hover:bg-glacier-white hover:text-deep-navy btn-lg transition-all duration-300"
                     >
                         Play the Games
                     </a>
