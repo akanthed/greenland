@@ -8,24 +8,54 @@ export type PerspectiveType = "usa" | "greenland" | "climate" | "economic";
 export interface PerspectiveInfo {
     id: PerspectiveType;
     label: string;
-    icon: string;
+    icon: React.ReactNode;
     description: string;
     color: string;
 }
+
+// SVG Flags
+const USAFlag = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 741 390" className="w-full h-full">
+        <rect width="741" height="390" fill="#fff" />
+        <path d="M0 0h741v30H0zm0 60h741v30H0zm0 120h741v30H0zm0 60h741v30H0zm0 60h741v30H0zm0 60h741v30H0z" fill="#b22234" />
+        <rect width="296.4" height="210" fill="#3c3b6e" />
+        <g fill="#fff">
+            <rect x="25" y="20" width="5" height="5" />
+            <rect x="75" y="20" width="5" height="5" />
+            <rect x="125" y="20" width="5" height="5" />
+            <rect x="175" y="20" width="5" height="5" />
+            <rect x="225" y="20" width="5" height="5" />
+            <rect x="50" y="45" width="5" height="5" />
+            <rect x="100" y="45" width="5" height="5" />
+            <rect x="150" y="45" width="5" height="5" />
+            <rect x="200" y="45" width="5" height="5" />
+            <rect x="250" y="45" width="5" height="5" />
+        </g>
+    </svg>
+);
+
+const GreenlandFlag = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 12" className="w-full h-full">
+        <path fill="#fff" d="M0 0h18v6H0z" />
+        <path fill="#d00" d="M0 6h18v6H0z" />
+        <path fill="#d00" d="M7 6a3 3 0 1 0-6 0h6z" />
+        <path fill="#fff" d="M1 6a3 3 0 1 0 6 0H1z" />
+    </svg>
+);
 
 // Perspective definitions
 export const perspectives: Record<PerspectiveType, PerspectiveInfo> = {
     usa: {
         id: "usa",
         label: "USA Strategic",
-        icon: "🇺🇸",
+        icon: <USAFlag />,
         description: "View through American strategic and military interests",
         color: "#3B82F6",
     },
     greenland: {
         id: "greenland",
         label: "Greenland Voice",
-        icon: "🇬🇱",
+        icon: <GreenlandFlag />,
         description: "The perspective of Greenlandic people and self-determination",
         color: "#10B981",
     },

@@ -84,7 +84,7 @@ export function PerspectiveSelector() {
                             {/* Icon */}
                             <motion.span
                                 whileHover={{ scale: 1.2, rotate: 10 }}
-                                className="text-6xl mb-6"
+                                className="w-20 h-20 flex items-center justify-center text-6xl mb-6"
                             >
                                 {perspective.icon}
                             </motion.span>
@@ -97,8 +97,8 @@ export function PerspectiveSelector() {
                             {/* Description */}
                             <p
                                 className={`text-sm ${currentPerspective === perspective.id
-                                        ? "text-glacier-white/80"
-                                        : "text-cool-gray"
+                                    ? "text-glacier-white/80"
+                                    : "text-cool-gray"
                                     }`}
                             >
                                 {perspective.description}

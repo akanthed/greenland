@@ -29,11 +29,11 @@ export function PerspectiveToggle({ onSelect, compact = false }: PerspectiveTogg
                         key={perspective.id}
                         onClick={() => handleSelect(perspective.id)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${currentPerspective === perspective.id
-                                ? "bg-glacier-white text-deep-navy"
-                                : "text-glacier-white hover:bg-white/10"
+                            ? "bg-glacier-white text-deep-navy"
+                            : "text-glacier-white hover:bg-white/10"
                             }`}
                     >
-                        <span className="text-xl">{perspective.icon}</span>
+                        <span className="w-8 h-8 flex items-center justify-center text-xl">{perspective.icon}</span>
                         <span className="font-medium">{perspective.label}</span>
                     </button>
                 ))}
@@ -52,15 +52,17 @@ export function PerspectiveToggle({ onSelect, compact = false }: PerspectiveTogg
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className={`flex items-start gap-4 p-4 rounded-xl transition-all border-2 ${currentPerspective === perspective.id
-                                ? "border-info bg-info/5"
-                                : "border-transparent bg-light-bg hover:border-border-gray"
+                            ? "border-info bg-info/5"
+                            : "border-transparent bg-light-bg hover:border-border-gray"
                             }`}
                     >
                         <span
-                            className="text-2xl w-10 h-10 flex items-center justify-center rounded-lg"
+                            className="w-10 h-10 p-1 flex items-center justify-center rounded-lg overflow-hidden"
                             style={{ backgroundColor: `${perspective.color}20` }}
                         >
-                            {perspective.icon}
+                            <span className="w-full h-full flex items-center justify-center text-2xl">
+                                {perspective.icon}
+                            </span>
                         </span>
                         <div className="flex-1 text-left">
                             <p className="font-semibold text-dark-slate">{perspective.label}</p>
